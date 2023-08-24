@@ -41,7 +41,7 @@ namespace Discount.API.Repositories
         public async Task<bool> UpdateDiscount(Coupon coupon)
         {
             var affected = await _connection.ExecuteAsync(@"Update Coupon 
-                Set productname =@ProductName, description = @Description, amount = @Amount where Id = @Id)",
+                Set productname =@ProductName, description = @Description, amount = @Amount where Id = @Id",
                 new { ProductName = coupon.ProductName, Description = coupon.Description, Amount = coupon.Amount, Id = coupon.Id });
 
             if (affected == 0)
