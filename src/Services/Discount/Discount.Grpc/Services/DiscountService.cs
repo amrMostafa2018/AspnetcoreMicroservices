@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Discount.Grpc.Entities;
 using Discount.Grpc.Protos;
 using Discount.Grpc.Repositories;
 using Grpc.Core;
@@ -13,7 +14,7 @@ namespace Discount.Grpc.Services
         private readonly IMapper _mapper;
         private readonly ILogger<DiscountService> _logger;
 
-        public DiscountService(IDiscountRepository discountRepository, 
+        public DiscountService(IDiscountRepository discountRepository,
                                ILogger<DiscountService> logger,
                                IMapper mapper)
         {
@@ -33,6 +34,35 @@ namespace Discount.Grpc.Services
             return couponModel;
         }
 
+        public override async Task<CouponModel> CreateDiscount(CreateDiscountRequest request, ServerCallContext context)
+        {
+            Coupon coupon = _mapper.Map<Coupon>(request.Coupon);
+            await _discountRepository.CreateDiscount(coupon);
+            _logger.LogInformation($"Discount is Successfuly created. Product Name : {coupon.ProductName}");
+            var couponModel = _mapper.Map<CouponModel>(coupon);
+            return couponModel;
+        }
 
+        public override async Task<CouponModel> UpdateDiscount(UpdateDiscountRequest request, ServerCallContext context)
+        {
+            Coupon coupon = _mapper.Map<Coupon>(request.Coupon);
+            await _discountRepository.UpdateDiscount(coupon);
+            _logger.LogInformation($"Discount is Successfuly Updated. Product Name : {coupon.ProductName}");
+            var couponModel = _mapper.Map<CouponModel>(coupon);
+            return couponModel;
+        }
+
+        public override async Task<DeleteDiscountResponse> DeleteDiscount(DeleteDiscountRequest request, ServerCallContext context)
+        {
+
+            var deleted = await _discountRepository.DeleteDiscount(request.ProductName);
+            var response = new DeleteDiscountResponse
+            {
+                Success = deleted
+            };
+            _logger.LogInformation($"Discount is Successfuly Deleted. Product Name : {request.ProductName}");
+
+            return response;
+        }
     }
 }
