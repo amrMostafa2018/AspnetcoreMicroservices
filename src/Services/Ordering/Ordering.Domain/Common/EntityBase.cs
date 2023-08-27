@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Ordering.Domain.Common
 {
-    public abstract partial class BaseEntity
+    public abstract partial class EntityBase
     {
         public int Id { get; protected set; }
         public string CreatedBy { get; set; }
