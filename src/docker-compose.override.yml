@@ -105,7 +105,7 @@ services:
     depends_on:
       - discountdb
     ports:
-      - "8003:80"
+      - "8017:80"
 
    ordering.api:
      container_name: ordering.api
